@@ -1,5 +1,6 @@
 const fs = require('fs');
 const os = require('os');
+const { Op } = require("sequelize");
 const express = require('express');
 const queue = require('express-queue');
 const parse = require('csv-parse').parse;
@@ -17,6 +18,27 @@ const DUPLICATE_ID_ERROR = 'Duplicate IDs are not allowed';
 const DUPLICATE_LOGIN_ERROR = 'Duplicate logins are not allowed';
 const SALARY_FORMAT_ERROR = 'Invalid salary formatting detected';
 const SALARY_NEGATIVE_ERROR = 'Salary cannot be negative';
+
+router.get('/', async (req, res) => {
+  const minSalary = req.query.minSalary;
+  const maxSalary = req.query.maxSalary;
+  const offset = req.query.offset;
+  const limit = req.query.limit;
+  const sortBy = req.query.sortBy;
+  const sortOrder = req.query.sortOrder;
+  const results = await db.users.findAll({
+    where: {
+      salary: {
+        [Op.gte]: minSalary ?? 0,
+        [Op.lte]: maxSalary ?? Number.POSITIVE_INFINITY,
+      }
+    },
+    order: [[sortBy, sortOrder]],
+    limit,
+    offset,
+  });
+  res.json({ results, limit, offset });
+})
 
 router.post('/upload', queue({ activeLimit: 1, queuedLimit: -1 }), upload.single('file'), (req, res) => {
   const file = req.file;
