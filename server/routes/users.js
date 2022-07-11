@@ -1,6 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const express = require('express');
+const queue = require('express-queue');
 const parse = require('csv-parse').parse;
 const multer  = require('multer');
 const upload = multer({ dest: os.tmpdir() });
@@ -17,7 +18,7 @@ const DUPLICATE_LOGIN_ERROR = 'Duplicate logins are not allowed';
 const SALARY_FORMAT_ERROR = 'Invalid salary formatting detected';
 const SALARY_NEGATIVE_ERROR = 'Salary cannot be negative';
 
-router.post('/upload', upload.single('file'), (req, res) => {
+router.post('/upload', queue({ activeLimit: 1, queuedLimit: -1 }), upload.single('file'), (req, res) => {
   const file = req.file;
   const csv = fs.readFileSync(file.path);
 
