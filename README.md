@@ -16,4 +16,4 @@ From the root project directory:
 ```
 cd client
 yarn start
-``
+```
