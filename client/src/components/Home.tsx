@@ -6,7 +6,11 @@ const Home: React.FC = () => {
   return (
     <Container
       maxWidth='lg'
-      sx={{ display: 'flex', flexDirection: 'column' }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        px: { xs: 2, sm: 4 },
+      }}
     >
       <Typography variant='h5'>
         List of employees
