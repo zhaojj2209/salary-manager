@@ -16,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
     salary: {
       type: DataTypes.FLOAT,
       allowNull: false,
+      validate: {
+        min: 0
+      }
     },
   });
   return Users;
