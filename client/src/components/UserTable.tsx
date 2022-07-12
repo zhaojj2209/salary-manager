@@ -6,6 +6,8 @@ interface Props {
   offset: number,
   minSalary: number,
   maxSalary: number,
+  // eslint-disable-next-line no-unused-vars
+  setCount: (count: number) => void,
 }
 
 const HeaderCellLabel = styled(TableSortLabel)(() => ({
@@ -14,7 +16,7 @@ const HeaderCellLabel = styled(TableSortLabel)(() => ({
 }));
 
 const Home: React.FC<Props> = (props) => {
-  const { offset, minSalary, maxSalary } = props;
+  const { offset, minSalary, maxSalary, setCount } = props;
   const [data, setData] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -49,6 +51,7 @@ const Home: React.FC<Props> = (props) => {
         } else {
           response.json().then((data) => {
             setData(data.results ?? []);
+            setCount(parseInt(data.count) ?? 0);
             setIsLoading(false);
           });
         }
@@ -123,9 +126,9 @@ const Home: React.FC<Props> = (props) => {
             {data.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
-                <TableCell align="right">{row.login}</TableCell>
-                <TableCell align="right">{row.name}</TableCell>
-                <TableCell align="right">${row.salary}</TableCell>
+                <TableCell align='right'>{row.login}</TableCell>
+                <TableCell align='right'>{row.name}</TableCell>
+                <TableCell align='right'>${row.salary}</TableCell>
               </TableRow>
             ))}
           </TableBody>

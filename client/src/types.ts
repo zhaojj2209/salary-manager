@@ -20,6 +20,7 @@ export interface User {
 
 export interface GetUsersResponse {
   results: User[],
+  count: string,
   limit: string,
   offset: string
 }

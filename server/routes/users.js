@@ -1,6 +1,6 @@
 const fs = require('fs');
 const os = require('os');
-const { Op } = require("sequelize");
+const { Op } = require('sequelize');
 const express = require('express');
 const queue = require('express-queue');
 const parse = require('csv-parse').parse;
@@ -22,8 +22,8 @@ const SALARY_NEGATIVE_ERROR = 'Salary cannot be negative';
 router.get('/', async (req, res) => {
   const minSalary = req.query.minSalary;
   const maxSalary = req.query.maxSalary;
-  const offset = req.query.offset;
-  const limit = req.query.limit;
+  const offset = req.query.offset ?? 0;
+  const limit = req.query.limit ?? 30;
   const sortBy = req.query.sortBy;
   const sortOrder = req.query.sortOrder;
   const queryOptions = {
@@ -39,15 +39,15 @@ router.get('/', async (req, res) => {
     limit,
     offset,
   }
-  const results = await db.users.findAll(queryOptions);
-  res.json({ results, limit, offset });
+  const { count, rows } = await db.users.findAndCountAll(queryOptions);
+  res.json({ results: rows, count, limit, offset });
 })
 
 router.post('/upload', queue({ activeLimit: 1, queuedLimit: -1 }), upload.single('file'), (req, res) => {
   const file = req.file;
   const csv = fs.readFileSync(file.path);
 
-  parse(csv, { comment: "#", from_line: 2 }, async (err, data) => {
+  parse(csv, { comment: '#', from_line: 2 }, async (err, data) => {
     if (err) {
       console.error(err);
       if (err.code === 'CSV_RECORD_INCONSISTENT_FIELDS_LENGTH') {

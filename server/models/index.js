@@ -21,5 +21,5 @@ const sequelize = new Sequelize(options);
 const db = {};
 db.name = database;
 db.sequelize = sequelize;
-db.users = require("./users.model.js")(sequelize, DataTypes);
+db.users = require('./users.model.js')(sequelize, DataTypes);
 module.exports = db;
