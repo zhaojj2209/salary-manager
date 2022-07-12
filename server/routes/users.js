@@ -26,17 +26,20 @@ router.get('/', async (req, res) => {
   const limit = req.query.limit;
   const sortBy = req.query.sortBy;
   const sortOrder = req.query.sortOrder;
-  const results = await db.users.findAll({
+  const queryOptions = {
     where: {
       salary: {
         [Op.gte]: minSalary ?? 0,
         [Op.lte]: maxSalary ?? Number.POSITIVE_INFINITY,
       }
     },
-    order: [[sortBy, sortOrder]],
+    ...(sortBy && {
+      order: [[sortBy, sortOrder ?? 'ASC']],
+    }),
     limit,
     offset,
-  });
+  }
+  const results = await db.users.findAll(queryOptions);
   res.json({ results, limit, offset });
 })
 
