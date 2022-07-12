@@ -10,7 +10,11 @@ const router = express.Router();
 
 const db = require('../models');
 
-// error messages
+// GET API error messages
+const MISSING_PARAMS_ERROR = 'Missing query params';
+const INVALID_PARAMS_ERROR = 'Invalid query params';
+
+// POST API error messages
 const PARSE_ERROR = 'Error parsing CSV file';
 const EMPTY_ERROR = 'CSV file cannot be empty';
 const INCONSISTENT_COLUMNS_ERROR = 'CSV file has inconsistent number of columns';
@@ -19,23 +23,45 @@ const DUPLICATE_LOGIN_ERROR = 'Duplicate logins are not allowed';
 const SALARY_FORMAT_ERROR = 'Invalid salary formatting detected';
 const SALARY_NEGATIVE_ERROR = 'Salary cannot be negative';
 
+const sortKeys = ['id', 'login', 'name', 'salary'];
+const sortOrderOptions = ['ASC', 'DESC'];
+
+const isInvalidFloat = (value) => {
+  const val = parseFloat(value);
+  return isNaN(val) || val < 0;
+}
+
+const isInvalidInt = (value) => {
+  const val = parseInt(value);
+  return isNaN(val) || val < 0;
+}
+
 router.get('/', async (req, res) => {
   const minSalary = req.query.minSalary;
   const maxSalary = req.query.maxSalary;
-  const offset = req.query.offset ?? 0;
-  const limit = req.query.limit ?? 30;
+  const offset = req.query.offset;
+  const limit = req.query.limit;
   const sortBy = req.query.sortBy;
   const sortOrder = req.query.sortOrder;
+
+  if (!minSalary || !maxSalary || !offset || !limit || !sortBy || !sortOrder) {
+    return res.status(400).json(MISSING_PARAMS_ERROR);
+  }
+  if (isInvalidFloat(minSalary) || isInvalidFloat(maxSalary) || isInvalidInt(offset) || (parseInt(limit) !== 30)) {
+    return res.status(400).json(INVALID_PARAMS_ERROR);
+  }
+  if (!sortKeys.includes(sortBy) || !sortOrderOptions.includes(sortOrder)) {
+    return res.status(400).json(INVALID_PARAMS_ERROR);
+  }
+
   const queryOptions = {
     where: {
       salary: {
-        [Op.gte]: minSalary ?? 0,
-        [Op.lte]: maxSalary ?? Number.POSITIVE_INFINITY,
+        [Op.gte]: minSalary,
+        [Op.lte]: maxSalary,
       }
     },
-    ...(sortBy && {
-      order: [[sortBy, sortOrder ?? 'ASC']],
-    }),
+    order: [[sortBy, sortOrder]],
     limit,
     offset,
   }
