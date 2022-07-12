@@ -133,11 +133,11 @@ const Home: React.FC<Props> = (props) => {
         {isLoading && (
           <CircularProgress />
         )}
-        {isError && (
+        {data.length === 0 && (
           <TableRow>
             <TableCell colSpan={4}>
               <Box display='flex' justifyContent='center' width='100%'>
-                Error loading data
+                {isError ? 'Error loading data' : 'No entries'}
               </Box>
             </TableCell>
           </TableRow>
