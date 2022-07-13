@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+  database:
+    image: postgres:14.4
+    container_name: user-database
+    restart: always
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    networks:
+      - salary-manager-network
+    expose:
+      - '${DB_PORT}'
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+
+  server:
+    build:
+      context: server
+    container_name: user-server
+    restart: always
+    depends_on:
+      - database
+    networks:
+      - salary-manager-network
+    ports:
+      - '8080:8080'
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      DB_HOST: user-database
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+  client:
+    build:
+      context: client
+    container_name: user-client
+    restart: always
+    depends_on:
+      - server
+    networks:
+      - salary-manager-network
+    ports:
+      - '3000:3000'
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:8080
+
+networks:
+  salary-manager-network:

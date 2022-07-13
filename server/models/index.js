@@ -3,18 +3,20 @@ require('dotenv').config();
 const env = process.env.NODE_ENV || 'development';
 
 const database = env ==='production'
-  ? process.env.DATABASE
+  ? process.env.DB_NAME
   : env ==='test'
-    ? process.env.TEST_DATABASE
-    : process.env.DEV_DATABASE;
+    ? process.env.TEST_DB_NAME
+    : process.env.DEV_DB_NAME;
 
 const { Sequelize, DataTypes } = require('sequelize');
+
 const options = {
   database,
-  username: process.env.USERNAME,
-  password: process.env.PASSWORD,
+  host: process.env.DB_HOST,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
   dialect: 'postgres',
-}
+};
 
 const sequelize = new Sequelize(options);
 
