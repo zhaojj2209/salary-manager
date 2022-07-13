@@ -1,21 +1,18 @@
 import styled from '@emotion/styled';
 import { Alert, Button, Snackbar, SnackbarCloseReason, Typography } from '@mui/material';
 import { Container } from '@mui/system';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const FileInput = styled('input')(() => ({
   fontSize: 18,
 }));
 
 const Upload: React.FC = () => {
-  const [domain, setDomain] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  useEffect(() => {
-    setDomain(process.env.REACT_APP_BACKEND_URL ?? '');
-  }, []);
+  const domain = process.env.REACT_APP_BACKEND_URL ?? '';
 
   const selectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
