@@ -51,7 +51,7 @@ const Home: React.FC<Props> = (props) => {
         } else {
           response.json().then((data) => {
             setData(data.results ?? []);
-            setCount(parseInt(data.count) ?? 0);
+            setCount(data.count ?? 0);
             setIsLoading(false);
           });
         }

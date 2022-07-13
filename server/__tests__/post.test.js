@@ -17,8 +17,8 @@ beforeEach(async () => {
   await db.users.bulkCreate(mockData);
 });
 
-describe('Users API', () => {
-  it('POST should fail with empty file', (done) => {
+describe('Users POST API', () => {
+  it('should fail with empty file', (done) => {
     request(server)
       .post('/users/upload')
       .attach('file', '__tests__/testdata/empty.csv')
@@ -29,7 +29,7 @@ describe('Users API', () => {
       })
   })
 
-  it('POST should fail with extra columns', (done) => {
+  it('should fail with extra columns', (done) => {
     request(server)
       .post('/users/upload')
       .attach('file', '__tests__/testdata/extraColumns.csv')
@@ -40,7 +40,7 @@ describe('Users API', () => {
       })
   })
 
-  it('POST should fail with missing columns', (done) => {
+  it('should fail with missing columns', (done) => {
     request(server)
       .post('/users/upload')
       .attach('file', '__tests__/testdata/missingColumns.csv')
@@ -51,7 +51,7 @@ describe('Users API', () => {
       })
   })
 
-  it('POST should fail with duplicate ID', (done) => {
+  it('should fail with duplicate ID', (done) => {
     request(server)
       .post('/users/upload')
       .attach('file', '__tests__/testdata/duplicateId.csv')
@@ -62,7 +62,7 @@ describe('Users API', () => {
       })
   })
 
-  it('POST should fail with duplicate login', (done) => {
+  it('should fail with duplicate login', (done) => {
     request(server)
       .post('/users/upload')
       .attach('file', '__tests__/testdata/duplicateLogin.csv')
@@ -73,7 +73,7 @@ describe('Users API', () => {
       })
   })
 
-  it('POST should fail with invalid salary', (done) => {
+  it('should fail with invalid salary', (done) => {
     request(server)
       .post('/users/upload')
       .attach('file', '__tests__/testdata/invalidSalary.csv')
@@ -84,7 +84,7 @@ describe('Users API', () => {
       })
   })
 
-  it('POST should fail with negative salary', (done) => {
+  it('should fail with negative salary', (done) => {
     request(server)
       .post('/users/upload')
       .attach('file', '__tests__/testdata/negativeSalary.csv')

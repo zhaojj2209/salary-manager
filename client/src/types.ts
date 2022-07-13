@@ -15,12 +15,12 @@ export interface User {
   id: string,
   login: string,
   name: string,
-  salary: string,
+  salary: number,
 }
 
 export interface GetUsersResponse {
   results: User[],
-  count: string,
-  limit: string,
-  offset: string
+  count: number,
+  limit: number,
+  offset: number
 }

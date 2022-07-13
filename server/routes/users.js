@@ -66,7 +66,12 @@ router.get('/', async (req, res) => {
     offset,
   }
   const { count, rows } = await db.users.findAndCountAll(queryOptions);
-  res.json({ results: rows, count, limit, offset });
+  res.json({ 
+    results: rows, 
+    count,
+    limit: parseInt(limit),
+    offset: parseInt(offset),
+  });
 })
 
 router.post('/upload', queue({ activeLimit: 1, queuedLimit: -1 }), upload.single('file'), (req, res) => {
